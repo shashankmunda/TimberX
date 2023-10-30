@@ -28,6 +28,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.lifecycle.Observer
+import androidx.lifecycle.map
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_DRAGGING
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
@@ -40,8 +41,6 @@ import com.naman14.timberx.databinding.LayoutBottomsheetControlsBinding
 import com.naman14.timberx.extensions.addFragment
 import com.naman14.timberx.extensions.hide
 import com.naman14.timberx.extensions.inflateWithBinding
-import com.naman14.timberx.extensions.map
-import com.naman14.timberx.extensions.observe
 import com.naman14.timberx.extensions.show
 import com.naman14.timberx.models.CastStatus
 import com.naman14.timberx.models.CastStatus.Companion.STATUS_PLAYING
@@ -166,7 +165,7 @@ class BottomControlsFragment : BaseNowPlayingFragment(), BottomSheetListener {
             if (it.isCasting) {
                 isCasting = true
 
-                mainViewModel.castProgressLiveData.observe(this, castProgressObserver)
+                mainViewModel.castProgressLiveData.observe(viewLifecycleOwner, castProgressObserver)
                 setLastFmAlbumImage(binding.bottomContolsAlbumart, it.castSongArtist, it.castSongAlbum, ArtworkSize.SMALL, it.castAlbumId.toLong())
 
                 binding.songArtist.text = getString(R.string.casting_to_x, it.castDeviceName)
@@ -192,10 +191,10 @@ class BottomControlsFragment : BaseNowPlayingFragment(), BottomSheetListener {
 
         mainViewModel.customAction
                 .map { it.peekContent() }
-                .observe(this) {
+                .observe(viewLifecycleOwner) {
                     when (it) {
                         ACTION_CAST_CONNECTED -> {
-                            mainViewModel.castLiveData.observe(this, castStatusObserver)
+                            mainViewModel.castLiveData.observe(viewLifecycleOwner, castStatusObserver)
                         }
                         ACTION_CAST_DISCONNECTED -> {
                             isCasting = false

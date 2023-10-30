@@ -23,7 +23,7 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import com.naman14.timberx.playback.TimberMusicService.Companion.TYPE_ARTIST
 import com.naman14.timberx.extensions.value
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Artist(

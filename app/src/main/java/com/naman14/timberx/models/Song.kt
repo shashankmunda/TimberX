@@ -31,7 +31,7 @@ import com.naman14.timberx.extensions.value
 import com.naman14.timberx.extensions.valueOrDefault
 import com.naman14.timberx.extensions.valueOrEmpty
 import com.naman14.timberx.util.Utils.getAlbumArtUri
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Song(

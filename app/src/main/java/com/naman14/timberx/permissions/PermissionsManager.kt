@@ -19,7 +19,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import androidx.annotation.VisibleForTesting
-import androidx.annotation.VisibleForTesting.PRIVATE
+import androidx.annotation.VisibleForTesting.Companion.PRIVATE
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.naman14.timberx.extensions.asString

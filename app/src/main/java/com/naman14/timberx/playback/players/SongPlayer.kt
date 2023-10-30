@@ -16,6 +16,7 @@ package com.naman14.timberx.playback.players
 
 import android.app.Application
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
@@ -146,7 +147,7 @@ class RealSongPlayer(
     private var metadataBuilder = MediaMetadataCompat.Builder()
     private var stateBuilder = createDefaultPlaybackState()
 
-    private lateinit var audioManager: AudioManager
+    private var audioManager: AudioManager
     private lateinit var focusRequest: AudioFocusRequest
 
     private var mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
@@ -155,7 +156,7 @@ class RealSongPlayer(
         setPlaybackState(stateBuilder.build())
 
         val sessionIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
-        val sessionActivityPendingIntent = PendingIntent.getActivity(context, 0, sessionIntent, 0)
+        val sessionActivityPendingIntent = PendingIntent.getActivity(context, 0, sessionIntent, FLAG_IMMUTABLE)
         setSessionActivity(sessionActivityPendingIntent)
         isActive = true
     }

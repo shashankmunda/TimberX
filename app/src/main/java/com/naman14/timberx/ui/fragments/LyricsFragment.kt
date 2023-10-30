@@ -72,6 +72,7 @@ class LyricsFragment : BaseNowPlayingFragment() {
                 .subscribeForOutcome { outcome ->
                     when (outcome) {
                         is Outcome.Success -> binding.lyrics = outcome.data
+                        else -> {}
                     }
                 }
                 .disposeOnDetach(view)

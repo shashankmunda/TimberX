@@ -17,8 +17,10 @@ package com.naman14.timberx.playback
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
 import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.MediaDescriptionCompat.Builder
 import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_ID
 import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
 import androidx.annotation.Nullable
@@ -29,6 +31,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.media.MediaBrowserServiceCompat
 import androidx.media.session.MediaButtonReceiver
 import com.naman14.timberx.R
+import com.naman14.timberx.R.string
 import com.naman14.timberx.constants.Constants
 import com.naman14.timberx.constants.Constants.ACTION_NEXT
 import com.naman14.timberx.constants.Constants.ACTION_PREVIOUS
@@ -61,7 +64,7 @@ import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
-import timber.log.Timber.d as log
+import timber.log.Timber
 
 // TODO pull out media logic to separate class to make this more readable
 class TimberMusicService : MediaBrowserServiceCompat(), KoinComponent, LifecycleOwner {
@@ -98,14 +101,14 @@ class TimberMusicService : MediaBrowserServiceCompat(), KoinComponent, Lifecycle
     private val permissionsManager by inject<PermissionsManager>()
 
     private lateinit var becomingNoisyReceiver: BecomingNoisyReceiver
-    private val lifecycle = LifecycleRegistry(this)
+    override val lifecycle = LifecycleRegistry(this)
 
-    override fun getLifecycle() = lifecycle
+    //override fun getLifecycle() = lifecycle
 
     override fun onCreate() {
         super.onCreate()
         lifecycle.currentState = Lifecycle.State.RESUMED
-        log("onCreate()")
+        Timber.d("onCreate()")
 
         // We get it here so we don't end up lazy-initializing it from a non-UI thread.
         player = get()
@@ -141,7 +144,7 @@ class TimberMusicService : MediaBrowserServiceCompat(), KoinComponent, Lifecycle
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        log("onStartCommand(): ${intent?.action}")
+        Timber.d("onStartCommand(): ${intent?.action}")
         if (intent == null) {
             return START_STICKY
         }
@@ -172,14 +175,14 @@ class TimberMusicService : MediaBrowserServiceCompat(), KoinComponent, Lifecycle
 
     override fun onDestroy() {
         lifecycle.currentState = Lifecycle.State.DESTROYED
-        log("onDestroy()")
+        Timber.d("onDestroy()")
         saveCurrentData()
         player.release()
         super.onDestroy()
     }
 
     //media browser
-    override fun onLoadChildren(parentId: String, result: Result<List<MediaBrowserCompat.MediaItem>>) {
+    override fun onLoadChildren(parentId: String, result: Result<List<MediaItem>>) {
         result.detach()
 
         // Wait to load media item children until we have the storage permission, this prevents crashes
@@ -197,26 +200,28 @@ class TimberMusicService : MediaBrowserServiceCompat(), KoinComponent, Lifecycle
     }
 
     @Nullable
-    override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): MediaBrowserServiceCompat.BrowserRoot? {
+    override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
         val caller = if (clientPackageName == APP_PACKAGE_NAME) {
             CALLER_SELF
         } else {
             CALLER_OTHER
         }
-        return MediaBrowserServiceCompat.BrowserRoot(MediaID(MEDIA_ID_ROOT.toString(), null, caller).asString(), null)
+        return BrowserRoot(MediaID(MEDIA_ID_ROOT.toString(), null, caller).asString(), null)
     }
 
-    private fun addMediaRoots(mMediaRoot: MutableList<MediaBrowserCompat.MediaItem>, caller: String) {
-        mMediaRoot.add(MediaBrowserCompat.MediaItem(
-                MediaDescriptionCompat.Builder().apply {
+    private fun addMediaRoots(mMediaRoot: MutableList<MediaItem>, caller: String) {
+        mMediaRoot.add(
+            MediaItem(
+                Builder().apply {
                     setMediaId(MediaID(TYPE_ALL_ARTISTS.toString(), null, caller).asString())
-                    setTitle(getString(R.string.artists))
+                    setTitle(getString(string.artists))
                     setIconUri(EMPTY_ALBUM_ART_URI.toUri())
-                    setSubtitle(getString(R.string.artists))
+                    setSubtitle(getString(string.artists))
                 }.build(), FLAG_BROWSABLE
-        ))
+        )
+        )
 
-        mMediaRoot.add(MediaBrowserCompat.MediaItem(
+        mMediaRoot.add(MediaItem(
                 MediaDescriptionCompat.Builder().apply {
                     setMediaId(MediaID(TYPE_ALL_ALBUMS.toString(), null, caller).asString())
                     setTitle(getString(R.string.albums))
@@ -225,7 +230,7 @@ class TimberMusicService : MediaBrowserServiceCompat(), KoinComponent, Lifecycle
                 }.build(), FLAG_BROWSABLE
         ))
 
-        mMediaRoot.add(MediaBrowserCompat.MediaItem(
+        mMediaRoot.add(MediaItem(
                 MediaDescriptionCompat.Builder().apply {
                     setMediaId(MediaID(TYPE_ALL_SONGS.toString(), null, caller).asString())
                     setTitle(getString(R.string.songs))
@@ -234,7 +239,7 @@ class TimberMusicService : MediaBrowserServiceCompat(), KoinComponent, Lifecycle
                 }.build(), FLAG_BROWSABLE
         ))
 
-        mMediaRoot.add(MediaBrowserCompat.MediaItem(
+        mMediaRoot.add(MediaItem(
                 MediaDescriptionCompat.Builder().apply {
                     setMediaId(MediaID(TYPE_ALL_PLAYLISTS.toString(), null, caller).asString())
                     setTitle(getString(R.string.playlists))
@@ -243,7 +248,7 @@ class TimberMusicService : MediaBrowserServiceCompat(), KoinComponent, Lifecycle
                 }.build(), FLAG_BROWSABLE
         ))
 
-        mMediaRoot.add(MediaBrowserCompat.MediaItem(
+        mMediaRoot.add(MediaItem(
                 MediaDescriptionCompat.Builder().apply {
                     setMediaId(MediaID(TYPE_ALL_GENRES.toString(), null, caller).asString())
                     setTitle(getString(R.string.genres))
@@ -253,8 +258,8 @@ class TimberMusicService : MediaBrowserServiceCompat(), KoinComponent, Lifecycle
         ))
     }
 
-    private fun loadChildren(parentId: String): ArrayList<MediaBrowserCompat.MediaItem> {
-        val mediaItems = ArrayList<MediaBrowserCompat.MediaItem>()
+    private fun loadChildren(parentId: String): ArrayList<MediaItem> {
+        val mediaItems = ArrayList<MediaItem>()
         val mediaIdParent = MediaID().fromString(parentId)
 
         val mediaType = mediaIdParent.type

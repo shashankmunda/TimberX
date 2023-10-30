@@ -22,7 +22,7 @@ import android.support.v4.media.MediaDescriptionCompat
 import com.naman14.timberx.playback.TimberMusicService.Companion.TYPE_GENRE
 import com.naman14.timberx.extensions.value
 import com.naman14.timberx.extensions.valueOrEmpty
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Genre(

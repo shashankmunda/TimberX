@@ -20,6 +20,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
@@ -88,7 +89,7 @@ class RealNotifications(
         }
 
         val nowPlayingIntent = Intent(context, MainActivity::class.java)
-        val clickIntent = PendingIntent.getActivity(context, 0, nowPlayingIntent, FLAG_UPDATE_CURRENT)
+        val clickIntent = PendingIntent.getActivity(context, 0, nowPlayingIntent, FLAG_IMMUTABLE)
 
         if (postTime == -1L) {
             postTime = currentTimeMillis()
@@ -132,7 +133,7 @@ class RealNotifications(
         val actionIntent = Intent(context, TimberMusicService::class.java).apply {
             action = ACTION_PREVIOUS
         }
-        val pendingIntent = PendingIntent.getService(context, 0, actionIntent, 0)
+        val pendingIntent = PendingIntent.getService(context, 0, actionIntent, FLAG_IMMUTABLE)
         return NotificationCompat.Action(R.drawable.ic_previous, "", pendingIntent)
     }
 
@@ -140,7 +141,7 @@ class RealNotifications(
         val actionIntent = Intent(context, TimberMusicService::class.java).apply {
             action = ACTION_PLAY_PAUSE
         }
-        val pendingIntent = PendingIntent.getService(context, 0, actionIntent, 0)
+        val pendingIntent = PendingIntent.getService(context, 0, actionIntent, FLAG_IMMUTABLE)
         return NotificationCompat.Action(playButtonResId, "", pendingIntent)
     }
 
@@ -148,7 +149,7 @@ class RealNotifications(
         val actionIntent = Intent(context, TimberMusicService::class.java).apply {
             action = ACTION_NEXT
         }
-        val pendingIntent = PendingIntent.getService(context, 0, actionIntent, 0)
+        val pendingIntent = PendingIntent.getService(context, 0, actionIntent, FLAG_IMMUTABLE)
         return NotificationCompat.Action(R.drawable.ic_next, "", pendingIntent)
     }
 

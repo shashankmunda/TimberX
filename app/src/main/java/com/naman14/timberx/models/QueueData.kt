@@ -27,7 +27,7 @@ data class QueueData(
         mediaControllerCompat?.let {
             return QueueData(
                     queueTitle = mediaControllerCompat.queueTitle?.toString().orEmpty().let {
-                        if (it.isEmpty()) "All songs" else it
+                        it.ifEmpty { "All songs" }
                     },
                     queue = mediaControllerCompat.queue?.toIDList() ?: LongArray(0),
                     currentId = mediaControllerCompat.metadata?.getString(METADATA_KEY_MEDIA_ID)?.toLong() ?: 0

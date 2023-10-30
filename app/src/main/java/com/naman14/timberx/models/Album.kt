@@ -22,7 +22,7 @@ import com.naman14.timberx.playback.TimberMusicService.Companion.TYPE_ALBUM
 import com.naman14.timberx.extensions.value
 import com.naman14.timberx.extensions.valueOrEmpty
 import com.naman14.timberx.util.Utils
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Album(

@@ -18,7 +18,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
 
 fun <T> LiveData<T>.observe(owner: LifecycleOwner, onEmission: (T) -> Unit) {
     return observe(owner, Observer<T> {
@@ -28,8 +27,8 @@ fun <T> LiveData<T>.observe(owner: LifecycleOwner, onEmission: (T) -> Unit) {
     })
 }
 
-fun <X, Y> LiveData<X>.map(mapper: (X) -> Y) =
-        Transformations.map(this, mapper)
+/*fun <X, Y> LiveData<X>.map(mapper: (X) -> Y) =
+        Transformations.map(this, mapper)*/
 
 typealias LiveDataFilter<T> = (T) -> Boolean
 

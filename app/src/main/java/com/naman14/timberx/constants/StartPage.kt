@@ -14,6 +14,8 @@
  */
 package com.naman14.timberx.constants
 
+import java.util.Locale
+
 enum class StartPage(val index: Int) {
     SONGS(0),
     ALBUMS(1),
@@ -24,13 +26,13 @@ enum class StartPage(val index: Int) {
 
     companion object {
         fun fromString(raw: String): StartPage {
-            return StartPage.values().single { it.name.toLowerCase() == raw }
+            return StartPage.values().single { it.name.lowercase(Locale.ROOT) == raw }
         }
 
         fun fromIndex(index: Int): StartPage {
             return StartPage.values().single { it.index == index }
         }
 
-        fun toString(value: StartPage): String = value.name.toLowerCase()
+        fun toString(value: StartPage): String = value.name.lowercase(Locale.ROOT)
     }
 }

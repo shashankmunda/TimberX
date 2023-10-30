@@ -1,5 +1,8 @@
 buildscript {
     apply from: './dependencies.gradle'
+    ext {
+        agp_version = '7.3.1'
+    }
 
     repositories {
         google()
@@ -7,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:${versions.gradlePlugin}"
+        classpath "com.android.tools.build:gradle:$agp_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "com.google.gms:google-services:${versions.googleServices}"
         classpath "com.google.firebase:firebase-crashlytics-gradle:${versions.crashlyticsPlugin}"
@@ -23,6 +26,6 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }

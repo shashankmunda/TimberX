@@ -16,6 +16,7 @@ package com.naman14.timberx.repository
 
 import java.io.File
 import java.util.Comparator
+import java.util.Locale
 
 interface FoldersRepository {
 
@@ -69,7 +70,7 @@ class RealFoldersRepository : FoldersRepository {
         if (p < 1) {
             return false
         }
-        val ext = name.substring(p).toLowerCase()
+        val ext = name.substring(p).lowercase(Locale.ROOT)
         for (o in SUPPORTED_EXT) {
             if (o == ext) {
                 return true

@@ -33,9 +33,12 @@ class AboutDialog : DialogFragment() {
 
     @NonNull
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return MaterialDialog(activity!!).show {
+        return MaterialDialog(requireActivity()).show {
             title(R.string.about_dialog_title)
-            message(R.string.about_dialog_body, lineHeightMultiplier = 1.4f, html = true)
+            message(R.string.about_dialog_body){
+                lineSpacing(1.4f)
+                html()
+            }
             positiveButton(R.string.about_dialog_dismiss)
             onDismiss {
                 // Make sure the DialogFragment dismisses as well

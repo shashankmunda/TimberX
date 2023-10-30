@@ -21,9 +21,9 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
 import com.naman14.timberx.R
+import timber.log.Timber
 import java.io.FileNotFoundException
 import android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI as AUDIO_URI
-import timber.log.Timber.d as log
 
 // TODO get rid of this and move things to respective repositories
 object MusicUtils {
@@ -34,7 +34,7 @@ object MusicUtils {
 
     fun getRealPathFromURI(context: Context, contentUri: Uri): String {
         val projection = arrayOf(MediaStore.Audio.Media.DATA)
-        log("Querying $contentUri")
+        Timber.d("Querying $contentUri")
         return context.contentResolver.query(contentUri, projection, null, null, null)?.use {
             val dataIndex = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
             if (it.moveToFirst()) {

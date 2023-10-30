@@ -52,7 +52,7 @@ class CastServer(private val context: Context) : NanoHTTPD(CAST_SERVER_PORT) {
             // SERVE ALBUM ART
             val albumId = parameters?.get(PARAM_ID) ?: return errorResponse()
             val albumArtUri = getAlbumArtUri(albumId.toLong())
-            var fisAlbumArt: InputStream? = null
+            val fisAlbumArt: InputStream?
             try {
                 fisAlbumArt = context.contentResolver.openInputStream(albumArtUri)
             } catch (e: FileNotFoundException) {
@@ -67,7 +67,7 @@ class CastServer(private val context: Context) : NanoHTTPD(CAST_SERVER_PORT) {
             val songPath = getRealPathFromURI(context, songUri)
             val song = File(songPath)
 
-            var fisSong: FileInputStream? = null
+            val fisSong: FileInputStream?
             try {
                 fisSong = FileInputStream(song)
             } catch (e: FileNotFoundException) {

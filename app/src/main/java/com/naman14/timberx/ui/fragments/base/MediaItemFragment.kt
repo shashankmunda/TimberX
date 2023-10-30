@@ -15,6 +15,7 @@
 package com.naman14.timberx.ui.fragments.base
 
 import android.os.Bundle
+import androidx.lifecycle.map
 import com.naman14.timberx.playback.TimberMusicService.Companion.MEDIA_CALLER
 import com.naman14.timberx.playback.TimberMusicService.Companion.MEDIA_ID_ARG
 import com.naman14.timberx.playback.TimberMusicService.Companion.MEDIA_TYPE_ARG
@@ -34,7 +35,6 @@ import com.naman14.timberx.constants.Constants.ALBUM
 import com.naman14.timberx.constants.Constants.ARTIST
 import com.naman14.timberx.constants.Constants.CATEGORY_SONG_DATA
 import com.naman14.timberx.extensions.argumentOrEmpty
-import com.naman14.timberx.extensions.map
 import com.naman14.timberx.extensions.observe
 import com.naman14.timberx.models.CategorySongData
 import com.naman14.timberx.models.Genre
@@ -116,7 +116,7 @@ open class MediaItemFragment : BaseNowPlayingFragment() {
 
         mainViewModel.customAction
                 .map { it.getContentIfNotHandled() }
-                .observe(this) {
+                .observe(viewLifecycleOwner) {
                     when (it) {
                         ACTION_SONG_DELETED -> mediaItemFragmentViewModel.reloadMediaItems()
                         ACTION_REMOVED_FROM_PLAYLIST -> mediaItemFragmentViewModel.reloadMediaItems()

@@ -23,6 +23,7 @@ import android.provider.MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH
 import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.NonNull
+import androidx.lifecycle.map
 import androidx.mediarouter.app.MediaRouteButton
 import com.afollestad.rxkprefs.Pref
 import com.google.android.material.bottomsheet.BottomSheetBehavior

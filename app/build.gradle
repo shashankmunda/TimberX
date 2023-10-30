@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-parcelize'
 
 apply from: '../dependencies.gradle'
 
@@ -16,6 +16,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {
+        viewBinding true
         compose true
     }
     buildTypes {
@@ -26,9 +27,6 @@ android {
     }
     dataBinding {
         enabled = true
-    }
-    androidExtensions {
-        experimental = true
     }
     lintOptions {
         disable 'MissingTranslation'
@@ -42,13 +40,12 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
-        useIR = true
     }
 
     composeOptions {
-        kotlinCompilerVersion versions.kotlin
         kotlinCompilerExtensionVersion versions.compose
     }
+    namespace 'com.naman14.timberx'
 }
 
 dependencies {
@@ -59,10 +56,10 @@ dependencies {
 
     // AndroidX
     implementation "androidx.appcompat:appcompat:${versions.appCompat}"
-    implementation "androidx.preference:preference:${versions.preference}"
+    implementation "androidx.preference:preference-ktx:${versions.preference}"
 
     implementation "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}"
-    implementation "androidx.coordinatorlayout:coordinatorlayout:${versions.coordinatorLayout}"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
 
     implementation "androidx.recyclerview:recyclerview:${versions.recyclerView}"
     implementation "androidx.cardview:cardview:${versions.cardView}"
@@ -72,7 +69,8 @@ dependencies {
 
     // Arch Components
     implementation "androidx.legacy:legacy-support-v4:${versions.legacySupport}"
-    implementation "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}"
+    implementation 'androidx.palette:palette-ktx:1.0.0'
+    //implementation "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}"
     kapt "androidx.lifecycle:lifecycle-compiler:${versions.lifecycle}"
 
     implementation "androidx.room:room-runtime:${versions.room}"
@@ -86,8 +84,7 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:${versions.rxRetrofit}"
 
     // Other Google
-    implementation "com.android.support:support-media-compat:${versions.mediaCompat}"
-    implementation "com.android.support:mediarouter-v7:${versions.mediaCompat}"
+    implementation "androidx.media3:media3-session:1.1.1"
 
     implementation "com.google.android.gms:play-services-cast-framework:${versions.cast}"
     implementation "com.google.firebase:firebase-core:${versions.firebase}"
@@ -130,13 +127,15 @@ dependencies {
     androidTestImplementation "androidx.test:rules:${versions.androidxTestRunner}"
 
     // Compose
-    implementation "androidx.compose.ui:ui:${versions.compose}"
-    implementation "androidx.ui:ui-tooling:${versions.compose}"
-    implementation "androidx.compose.foundation:foundation:${versions.compose}"
-    implementation "androidx.compose.material:material:${versions.compose}"
-    implementation "androidx.compose.material:material-icons-core:${versions.compose}"
-    implementation "androidx.compose.material:material-icons-extended:${versions.compose}"
-    implementation "androidx.compose.runtime:runtime-livedata:${versions.compose}"
+    def composeBom = platform('androidx.compose:compose-bom:2023.10.01')
+    implementation composeBom
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.compose.ui:ui-tooling-preview"
+    implementation "androidx.compose.foundation:foundation"
+    implementation "androidx.compose.material:material"
+    implementation "androidx.compose.material:material-icons-core"
+    implementation "androidx.compose.material:material-icons-extended"
+    implementation "androidx.compose.runtime:runtime-livedata"
 }
 
 apply plugin: 'com.google.gms.google-services'

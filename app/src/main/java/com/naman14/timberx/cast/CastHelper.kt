@@ -17,6 +17,7 @@ package com.naman14.timberx.cast
 import androidx.core.net.toUri
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaInfo.STREAM_TYPE_BUFFERED
+import com.google.android.gms.cast.MediaLoadRequestData
 import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.MediaMetadata.KEY_ALBUM_TITLE
 import com.google.android.gms.cast.MediaMetadata.KEY_ARTIST
@@ -52,7 +53,11 @@ object CastHelper {
         try {
             val remoteMediaClient = castSession.remoteMediaClient
             // TODO replace deprecated usage with correct usage
-            remoteMediaClient.load(song.toMediaInfo(), true, 0)
+            remoteMediaClient?.load(MediaLoadRequestData.Builder()
+                .setMediaInfo(song.toMediaInfo())
+                .setAutoplay(true)
+                .setCurrentTime(0).build())
+            //remoteMediaClient?.load(song.toMediaInfo()!!, true, 0)
         } catch (e: Exception) {
             Timber.d(e, "castSong failed")
         }
@@ -61,14 +66,14 @@ object CastHelper {
     fun castSongQueue(castSession: CastSession, songs: List<Song>, currentPos: Int) {
         try {
             val remoteMediaClient = castSession.remoteMediaClient
-            remoteMediaClient.queueLoad(songs.toQueueInfoList(), currentPos, MediaStatus.REPEAT_MODE_REPEAT_OFF, 0, null)
+            remoteMediaClient?.queueLoad(songs.toQueueInfoList(), currentPos, MediaStatus.REPEAT_MODE_REPEAT_OFF, 0, null)
         } catch (e: Exception) {
             Timber.d(e, "castSongQueue failed")
         }
     }
 
     private fun List<Song>.toQueueInfoList(): Array<MediaQueueItem> {
-        return map { MediaQueueItem.Builder(it.toMediaInfo()).build() }.toTypedArray()
+        return map { MediaQueueItem.Builder(it.toMediaInfo()!!).build() }.toTypedArray()
     }
 
     private fun Song.toMediaInfo(): MediaInfo? {
